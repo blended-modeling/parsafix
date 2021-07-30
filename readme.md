@@ -124,29 +124,26 @@ Parsafix has now been invited as a contact by the host. All that is left to do, 
 ### Setting up Modelix
 How to install the Modelix server and the Modelix plugin inside of MPS can be found on the [Modelix Github page](https://github.com/modelix/modelix). Getting the Modelix server to run proved quite a challenge, so don't be disheartened if you run into some problems here. In the _docs_ directory of this repository I have added a file named _**Running Modelix locally**_ that explains how I eventually managed to get the Modelix server running.
 
-Once everything is installed, follow the steps below (if you haven't already done this) to connect to the Modelix server via de Modelix plugin in MPS:
+### Starting Parsafix
+Once everything is installed, follow the steps below to start up Parsafix.\
+These steps should be followed every time you wish to start up Parsafix from scratch. The above installations only need to be performed once.
 
 1. Start up the Modelix server (model server + database)
 2. Open MPS and open the MPS project inside the Modelix directory (from the repository on the Modelix Github page)
-3. In the bottom bar inside MPS, click the "Cloud" tab.
-4. Inside the "Cloud" tab view, right-click the yellow C icon and click "Add repository".
-5. A popup will appear, where we fill in the address of our local Modelix server (`localhost:28101`)
-6. The "Cloud" tab should indicate that it is connected to the server
-
-### Starting Parsafix
-At this point, you should be ready to fire up and experiment with Parsafix. Follow the steps below to do so.\
-Here I've assumed that you still have the OpenFire and Modelix server running from the previous steps, as well as Eclipse and MPS (with the Modelix project open). If not, do so first.
-
-1. Inside MPS, leaving the Modelix project open, open the MPS project that contains the GenericDSL implementation.
-2. Inside the GenericDSL project, go down to the "Cloud" tab, expand the repository and under "data [master]" right-click "ROOT #1" and click "Add Module".
-3. A popup will appear. Name the module whatever you like. I usually go with `TestModule`.
-4. Right-click the new Module and click "Add Model". Name it anything. I usually go with `TestModel`.
-5. Right-click the module and click "Bind to Transient Module".
-6. In MPS's project view a "Cloud" option should now appear. Click the dropdown icon next to it and right-click the model. Click the Model Properties option.
-7. Inside the popup, go to the "Used Languages" tab. Click the + sign on the right and add GenericDSL. Click "Apply" and close the popup.
-8. Inside Eclipse, connect to Saros as the host user. In the Saros view, right-click "No Session Running" and click "Share Project(s)". Select a (preferably empty) project and click "Finish".
-9. Inside a terminal in the Parsafix root directory, run the following command: `node index.js mps spoofax`. This starts up Parsafix.
-10. Inside Eclipse, the Parsafix contact should have come online. Richt-click it and select "Add to Saros Session".
+3. Inside MPS, do the following if you have not already done so during the Modelix installation (MPS should remember the repository after this step has been performed once):\
+   a. Inside the "Cloud" tab view, right-click the yellow C icon and click "Add repository".\
+   b. A popup will appear, where we fill in the address of our local Modelix server (`localhost:28101`)\
+   c. The "Cloud" tab should indicate that it is connected to the server\
+5. Then, leaving the Modelix project open, open the MPS project that contains the GenericDSL implementation.
+6. Inside the GenericDSL project, go down to the "Cloud" tab, expand the repository and under "data [master]" right-click "ROOT #1" and click "Add Module".
+7. A popup will appear. Name the module whatever you like. I usually go with `TestModule`.
+8. Right-click the new Module and click "Add Model". Name it anything. I usually go with `TestModel`.
+9. Right-click the module and click "Bind to Transient Module".
+10. In MPS's project view a "Cloud" option should now appear. Click the dropdown icon next to it and right-click the model. Click the Model Properties option.
+11. Inside the popup, go to the "Used Languages" tab. Click the + sign on the right and add GenericDSL. Click "Apply" and close the popup.
+12. Inside Eclipse, connect to Saros as the host user. In the Saros view, right-click "No Session Running" and click "Share Project(s)". Select a (preferably empty) project and click "Finish".
+13. Inside a terminal in the Parsafix root directory, run the following command: `node index.js mps spoofax`. This starts up Parsafix.
+14. Inside Eclipse, the Parsafix contact should have come online. Richt-click it and select "Add to Saros Session".
 
 Add this point you can start adding GenericDSL "roots" within MPS, which should generate new ".dsl" files in Eclipse.
 _NOTE: Spoofax does not currently have a GenericDSL implementation. It is just an example language. The .dsl files should be opened with the default Eclipse text editor._
