@@ -1,0 +1,11 @@
+{
+    "data": {
+        "id":"0",
+        "concept":"model",
+        "parentId":"null",
+        "roleInParent":"models",
+        "childrenIds":[],
+        "properties": ["name=TestModel"]
+    },
+    "children": []
+}

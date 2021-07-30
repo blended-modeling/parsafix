@@ -1,0 +1,77 @@
+body
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    width: 100vw;
+    height: 100vh;
+}
+
+.container 
+{
+    float: left;
+
+    width: 33.33%;
+    height: 100%;
+}
+
+#mps-container
+{
+    background-color: #4A5759;
+}
+
+#parsafix-container
+{
+    background-color: #DEDBD2;
+}
+
+#spoofax-container
+{
+    background-color: #a99cde;
+}
+
+.content
+{
+    margin: 10px;
+    padding: 10px;
+
+    border: 1px solid black;
+    background-color: white;
+    overflow: hidden;
+    max-height: 100%;
+}
+
+.header
+{
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.data
+{
+    border: 1px solid darkgray;
+    padding: 5px;
+    font-family: courier;
+    font-size: 11px;
+    max-height: calc(100% - 85px);
+    overflow: auto;
+}
+
+.file-name
+{
+    font-weight: bold;
+}
+
+pre
+{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#spoofax-data
+{
+    width: 100%;
+    height: 100%;
+}
