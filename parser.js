@@ -44,7 +44,7 @@ class Parser
     //-------------------------------------------------------------------------------
     mpsOperation(opType, nodeId, treeModel, op)
     {
-        console.log("MPS operation:", opType, nodeId);
+        console.log("MPS operation:", opType, nodeId, op);
 
         switch (opType)
         {   
@@ -102,7 +102,7 @@ class Parser
 
         //Look for the node's root node (maybe this is a new root node)
         var rootNode = node;
-        while (rootNode["data"]["id"] != "1" && rootNode != null)
+        while (rootNode != null && rootNode["data"]["id"] != "1")
         {
             if (rootNode["data"]["concept"].endsWith(rootNodeConceptKey))
             {
@@ -121,9 +121,6 @@ class Parser
             //Find the corresponding model
             for (const modelId in this.parsafixDataModel) 
             {
-                console.log("Model id: " + modelId);
-                console.log(this.parsafixDataModel[modelId]);
-
                 if (this.parsafixDataModel[modelId].hasOwnProperty("mps_root_id") && this.parsafixDataModel[modelId]["mps_root_id"] == rootNode["data"]["id"])
                 {
                     curModelId = modelId;
@@ -233,6 +230,7 @@ class Parser
                 {
                     curModel["children"] = [];
                 }
+
                 this.editMappedElement(curModel["children"], "mps_id", node["data"]["id"], 
                 { 
                     "name":this.getMpsName(node), 
@@ -348,11 +346,10 @@ class Parser
                     editData["edit"] = difData["edit"];
 
                     //Tell it the new line
-                    var text = tools.generateSpoofaxDslLine(editedElement, false);
+                    var text = tools.generateSpoofaxDslLine(editedElement, false, tools.getSpoofaxLine(this.spoofaxDataModel, this.parsafixDataModel[modelId]["spoofax_file"], editedElement["spoofax_line_index"]));
                     editData["text"] = text;
 
                     //Update the Spoofax project model
-                    console.log("Before: ", this.spoofaxDataModel);
                     this.spoofaxDataModel[this.parsafixDataModel[modelId]["spoofax_file"]] = tools.putSpoofaxLine(this.spoofaxDataModel, this.parsafixDataModel[modelId]["spoofax_file"], editedElement["spoofax_line_index"], text);   
                 }             
                 break;
@@ -471,7 +468,7 @@ class Parser
                   name = keyVal[1]; 
                   name = name.replaceAll('\u0000', '');
 
-                  return;
+                  return name;
                }
             });
 
@@ -479,7 +476,7 @@ class Parser
         } 
         catch (error) 
         {
-            //console.log("Could not get name of MPS node: " + node);
+            console.log("Could not get name of MPS node: " + JSON.stringify(node));
         }
     }
 
@@ -629,6 +626,12 @@ class Parser
             var oldElement = tools.findInTree(curModel, ["spoofax_line_index"], lineIndex);
             if (oldElement != null)
             {
+                if (oldElement["type"] != "comment")
+                {
+                    //Tell MPS to delete the element
+                    this.parsafixToMpsEdit(oldElement, curModel, "deleteOp", (oldElement["parent_line_index"] == null), modelId, false)
+                }
+
                 //Remove the old element from the mapping
                 var parentElement = tools.findInTree(curModel, ["spoofax_line_index"], oldElement["parent_line_index"]);
                 if (parentElement == null)
@@ -640,9 +643,6 @@ class Parser
 
             //Add the line as a comment
             this.editMappedElement(curModel["children"], "spoofax_line_index", lineIndex, { "text":line, "type":"comment", "parent_line_index":null }, type)
-
-            //Tell MPS to delete the element
-            //TODO
         }
     }
 
@@ -734,7 +734,7 @@ class Parser
         console.log(JSON.stringify(editedElement));
 
         var editData = {
-            "opType": "insertOp", //any deletions at this point or property changes, which Modelix treats as insertions
+            "opType": opType,
             "isNewElement": isNewElement,
             "isRootNode": isRootNode
         };
@@ -864,6 +864,7 @@ class Parser
     //-------------------------------------------------------------------------------
     editMappedElement(destinationArr, idKey, idValue, elementAttributes, type, children, parent, line)
     {
+        //console.log(destinationArr, idKey, idValue, elementAttributes, type, children, parent, line);
         var element = this.getMappedElement(idKey, idValue, destinationArr);
         var newElement = false;
 

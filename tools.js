@@ -643,11 +643,12 @@ function getMpsEditOffset(editedElement, oldMpsProjectData, spoofaxData, dir)
             edit = oldName.substr(difIndex, Math.abs(difLength));
         }
 
-        console.log("--> getMpsEditOffset():");
-        console.log(editedElement, spoofaxData, dir, difIndex);
+        var line = getSpoofaxLine(spoofaxData, dir, editedElement["spoofax_line_index"]);
+        console.log(line, difIndex);
+        var offset = difIndex - 1 + getSpoofaxNameOffset(editedElement, line); //Where the name of the element begins + the index we calculated
 
         return {
-            "difIndex": getSpoofaxNameOffset(editedElement, getSpoofaxLine(spoofaxData, dir, editedElement["spoofax_line_index"])) + difIndex, //Where the name of the element begins + the index we calculated
+            "difIndex": offset,
             "difLength": difLength,
             "oldText": oldName,
             "edit": edit
@@ -664,7 +665,7 @@ function getMpsEditOffset(editedElement, oldMpsProjectData, spoofaxData, dir)
 //-------------------------------------------------------------------------------
 // Generates a DSL line for Spoofax from the project data
 //-------------------------------------------------------------------------------
-function generateSpoofaxDslLine(element, isNew)
+function generateSpoofaxDslLine(element, isNew, line)
 {
     var name = element["name"];
     if (name == null)
@@ -674,16 +675,39 @@ function generateSpoofaxDslLine(element, isNew)
 
     var indentation = '';
 
-    switch (element["type"]) {
-        case "parent":
-            indentation = '    ';
-            break;
-        case "child":
-            indentation = '        ';
-            break;
+    if (isNew)
+    {
+        switch (element["type"]) {
+            case "parent":
+                indentation = '    ';
+                break;
+            case "child":
+                indentation = '        ';
+                break;
+        }
+    }
+    else
+    {
+        var spaces = getSpoofaxTypeOffset(element, line);
+        for (let i = 0; i < spaces; i++) {
+            indentation += ' ';
+        }
     }
 
     return regularToSarosText(indentation + element["type"] + ' ' + name);
+}
+
+//-------------------------------------------------------------------------------
+// Returns the offset of where a element's name begins
+//-------------------------------------------------------------------------------
+function getSpoofaxTypeOffset(element, line)
+{
+    if (hasElementKey(element))
+    {
+        console.log("line", line);
+        return sarosToRegularText(line).replace('\n', '').indexOf(element["type"]);
+    }
+    return 0;
 }
 
 //-------------------------------------------------------------------------------
@@ -693,9 +717,9 @@ function getSpoofaxNameOffset(element, line)
 {
     if (hasElementKey(element))
     {
-        console.log("Index returned: " + parseInt(sarosToRegularText(line).indexOf(element["type"]) + element["type"].length + 1));
-        console.log(line, sarosToRegularText(line));
-        return sarosToRegularText(line).indexOf(element["type"]) + element["type"].length + 1;
+        var typeOffset = sarosToRegularText(line).replace('\n', '').indexOf(element["type"]);
+        var typeLength = element["type"].length;
+        return typeOffset + typeLength + 1;
     }
 }
 
