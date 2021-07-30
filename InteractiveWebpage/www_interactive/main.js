@@ -97,7 +97,7 @@ socket.on('parsafix-data', function(data)
 //-------------------------------------------------------------------------------
 // Upon receiving Spoofax data
 //-------------------------------------------------------------------------------
-socket.on('spoofax-data', function(data) 
+socket.on('spoofax-data', function(data)
 {
     if (data["model_0.dsl"] != null)
     {
@@ -168,4 +168,5 @@ $("#spoofax-data").keyup(function(e)
     };
 
     socket.emit('spoofax-edit', {"model_0.dsl":spoofaxText.replaceAll('\n', '')}, 'insertOp', op, "model_0.dsl");
+    socket.emit('spoofax-data', {"model_0.dsl":spoofaxText.replaceAll('\n', '')});
 });

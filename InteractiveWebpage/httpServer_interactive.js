@@ -88,6 +88,11 @@ class HttpServer
                 this.classEmitter.emit("spoofax-edit", data, opType, op, dir);
             }.bind(this));
 
+            socket.on('spoofax-data', function(data)
+            {
+                this.io.emit("spoofax-data", data);
+            }.bind(this));
+
 
             socket.on("add-child", function(id)
             {
@@ -240,7 +245,7 @@ class HttpServer
     //-------------------------------------------------------------------------------
     updateSpoofaxData(newData)
     {
-        console.log("\nUpdating Spoofax data: " + JSON.stringify(newData));
+        //console.log("\nUpdating Spoofax data: " + JSON.stringify(newData));
         this.spoofaxData = newData;
         this.io.emit('spoofax-data', this.spoofaxData);
     }
